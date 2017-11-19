@@ -1,0 +1,6 @@
+: test
+( clicker sur le bon bouton. n°2. c'est vraiment long ce tres long texte en francais, but it can also be writted in English.
+- bad
++ good
+- bad2
++ good2

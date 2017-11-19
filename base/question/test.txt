@@ -1,0 +1,6 @@
+: test
+( clicker sur le bon bouton
+- pas bon
++ bon
+- encore pas bon
++ encore bon
