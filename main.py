@@ -18,8 +18,8 @@ class game:
         appended = []
         for loop in path:
             appended.append(loop+"/question")
-        self.q = questions(appended)
-
+        self.q = questions(appended,False,False)
+        self.mouse = 0#0 = None, 1 = Up, 2 = Down
         #for test only
         
         self.xSize, self.ySize = pygame.display.get_surface().get_size()
@@ -38,6 +38,10 @@ class game:
     
     def frame(self):
         if not(self.finished):
+            if self.mouse==1:
+                self.mouse=0
+            #really fun
+            ##self.BColor = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
             resized = False
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -48,15 +52,24 @@ class game:
                     self.ySize = event.dict['size'][1]
                     self.window = pygame.display.set_mode((self.xSize,self.ySize), RESIZABLE)
                     self.q.resize(self.xSize,self.ySize)
+                elif event.type == pygame.MOUSEMOTION:
+                    self.my, self.mx = event.pos
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    self.mouse = 1
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.mouse = 2
             #self.window.blit(self.DBackground, (0,0))
 
             pygame.draw.rect(self.window,self.BColor,(0,0,self.xSize,self.ySize))
             
             #for test
             #self.randomQuestion()
-            re = self.q.drawQ(self.window,self.getQuestion(),resized)
+            re = self.q.drawQ(self.window,self.getQuestion(),self.mx,self.my,self.mouse,resized)
             if re[0]:
-                print("bonne réponse")
+                if re[1]:
+                    print("bonne réponse")
+                elif not re[1]:
+                    print("mauvaise réponse")
                 self.randomQuestion()
             #end for test
             pygame.display.flip()

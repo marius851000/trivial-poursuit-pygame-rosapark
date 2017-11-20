@@ -61,7 +61,8 @@ class questions:
         self.xSize = x
         self.ySize = y
         
-    def drawQ(self,window,nb=0,resized=True):
+    def drawQ(self,window,nb,mx,my,mouse,resized=True):
+        reponse = [False,True]#1 : validation, 2 : réponse ( vrai ou faux )
         Fwidth = self.xSize-100
         if self.QText == False or self.QTextQ != nb:
             resized=True
@@ -92,7 +93,7 @@ class questions:
             for loop in answer:
                 temp_width, temp_height = self.AFont.size(loop[0])
                 temp2 = self.AFont.render(loop[0],True,self.AFontColor)
-                self.QAnswer.append([temp2,temp_height])
+                self.QAnswer.append([temp2,temp_height,loop])
                 if temp_width>biggest:
                     biggest=temp_width
             self.ABiggest=biggest
@@ -106,14 +107,26 @@ class questions:
         temp=temp+loop[1]*2+20
 
         for loop in self.QAnswer:
-            pygame.draw.rect(window,self.AFond, (self.xSize/2-self.ABiggest/2-20,temp,self.ABiggest+40,loop[1]))
+            mod=0
+            mod2=0
+            if mx>temp and mx<temp+loop[1]:
+                mod=4
+                mod2=5
+                if mouse == 2:
+                    mod=-3
+                    mod2=-20
+                if mouse == 1:
+                    reponse[1] = loop[2][1]
+                    reponse[0] = True
+                    print(reponse)
+            pygame.draw.rect(window,self.AFond, (self.xSize/2-self.ABiggest/2-20-mod2,temp-mod-3,self.ABiggest+40+mod2*2,loop[1]+mod*2+6))
             AVx = self.xSize/2-self.ABiggest/2-20-loop[1]*1.5
             if AVx>0:
-                pygame.draw.rect(window,self.AVFond, (AVx, temp, loop[1], loop[1]))
+                pygame.draw.rect(window,self.AVFond, (AVx-mod-3, temp-mod-3, loop[1]+mod*2+6, loop[1]+mod*2+6))
             window.blit(loop[0], (self.xSize/2-loop[0].get_rect().width/2,temp))
-            temp=temp+loop[1]+10
+            temp=temp+loop[1]+16
             
-        return [False]
+        return reponse
     
     def printQ(self,nb=0):
         self.questionList[nb].printQ()
